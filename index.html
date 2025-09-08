@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand ICAR Institutes District Allocation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .content {
+            display: flex;
+            height: 600px;
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .legend {
+            width: 350px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+        }
+        
+        .legend h3 {
+            margin-top: 0;
+            color: #2c5530;
+            font-size: 18px;
+            border-bottom: 2px solid #2c5530;
+            padding-bottom: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+        }
+        
+        .institute-info {
+            flex: 1;
+        }
+        
+        .institute-name {
+            font-weight: bold;
+            color: #2c5530;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        
+        .district-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .stats {
+            background: #e8f5e8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .stats h4 {
+            margin: 0 0 10px 0;
+            color: #2c5530;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .popup-content {
+            font-size: 14px;
+        }
+        
+        .popup-content h4 {
+            margin: 0 0 10px 0;
+            color: #2c5530;
+        }
+        
+        .popup-content p {
+            margin: 5px 0;
+        }
+        
+        .coordinates {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Jharkhand ICAR Institutes District Allocation Map</h1>
+            <p>Visualization of ICAR institutes and their allocated districts under VKSA</p>
+        </div>
+        
+        <div class="content">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            
+            <div class="legend">
+                <h3>ICAR Institutes Legend</h3>
+                
+                <div class="stats">
+                    <h4>Quick Stats</h4>
+                    <div class="stat-item">
+                        <span>Total Districts:</span>
+                        <span>24</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>ICAR Institutes:</span>
+                        <span>6</span>
+                    </div>
+                </div>
+                
+                <div id="legend-items"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ICAR Institute data with districts
+        const instituteData = {
+            'IIAB Garhkhatanga, Ranchi': {
+                districts: ['Dhanbad', 'Godda', 'Sahibganj', 'Garhwa', 'Chatra'],
+                coords: [23.2743, 85.3415],
+                altitude: '618m',
+                controlling: 'ICAR',
+                color: '#FF6B6B'
+            },
+            'NBPGR Garhkhatanga, Ranchi': {
+                districts: ['Dumka'],
+                coords: [23.2713, 85.3466],
+                altitude: '625m',
+                controlling: 'ICAR-NBPGR, New Delhi',
+                color: '#4ECDC4'
+            },
+            'NISA Namkum, Ranchi': {
+                districts: ['Lohardaga', 'Khunti', 'Simdega', 'Purvi Singhbhum', 'Saraikela-Kharsawan'],
+                coords: [23.3302, 85.3749],
+                altitude: '650m',
+                controlling: 'ICAR',
+                color: '#45B7D1'
+            },
+            'ICAR-RCER-RS Plandu, Ranchi': {
+                districts: ['Gumla', 'Pakur', 'Latehar', 'Palamu', 'Paschim Singhbhum'],
+                coords: [23.2853, 85.4114],
+                altitude: '585m',
+                controlling: 'ICAR RC ER Patna',
+                color: '#96CEB4'
+            },
+            'ICAR-IARI, Hazaribagh': {
+                districts: ['Hazaribagh', 'Bokaro', 'Giridih', 'Deogarh', 'Jamtara'],
+                coords: [24.2851, 85.3600],
+                altitude: '390m',
+                controlling: 'ICAR',
+                color: '#FFEAA7'
+            },
+            'ICAR-CRUSS Hazaribagh': {
+                districts: ['Ramgarh', 'Koderma'],
+                coords: [23.9966, 85.3691],
+                altitude: '614m',
+                controlling: 'ICAR-CRRI Cuttack',
+                color: '#DDA0DD'
+            }
+        };
+
+        // Initialize map centered on Jharkhand
+        const map = L.map('map').setView([23.6102, 85.2799], 7);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers for each institute
+        Object.entries(instituteData).forEach(([instituteName, data]) => {
+            const marker = L.marker(data.coords).addTo(map);
+            
+            const popupContent = `
+                <div class="popup-content">
+                    <h4>${instituteName}</h4>
+                    <p><strong>Districts (${data.districts.length}):</strong><br>
+                    ${data.districts.join(', ')}</p>
+                    <p><strong>Controlling Body:</strong> ${data.controlling}</p>
+                    <p><strong>Altitude:</strong> ${data.altitude}</p>
+                    <p class="coordinates">
+                        ${data.coords[0]}°N, ${data.coords[1]}°E
+                    </p>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent);
+        });
+
+        // Create legend
+        const legendContainer = document.getElementById('legend-items');
+        
+        Object.entries(instituteData).forEach(([instituteName, data]) => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            
+            legendItem.innerHTML = `
+                <div class="color-box" style="background-color: ${data.color}"></div>
+                <div class="institute-info">
+                    <div class="institute-name">${instituteName}</div>
+                    <div class="district-list">
+                        Districts (${data.districts.length}): ${data.districts.join(', ')}
+                    </div>
+                </div>
+            `;
+            
+            legendContainer.appendChild(legendItem);
+        });
+
+        // Add district boundaries as approximate circles (since we don't have actual shapefiles)
+        Object.entries(instituteData).forEach(([instituteName, data]) => {
+            data.districts.forEach((district, index) => {
+                // Create approximate positions for districts around each institute
+                const offsetLat = (Math.random() - 0.5) * 0.4;
+                const offsetLng = (Math.random() - 0.5) * 0.4;
+                const districtCoords = [
+                    data.coords[0] + offsetLat,
+                    data.coords[1] + offsetLng
+                ];
+                
+                const circle = L.circle(districtCoords, {
+                    color: data.color,
+                    fillColor: data.color,
+                    fillOpacity: 0.3,
+                    radius: 8000
+                }).addTo(map);
+                
+                circle.bindPopup(`
+                    <div class="popup-content">
+                        <h4>${district} District</h4>
+                        <p><strong>Allocated to:</strong> ${instituteName}</p>
+                        <p><strong>Controlling Body:</strong> ${data.controlling}</p>
+                    </div>
+                `);
+            });
+        });
+
+        // Add scale control
+        L.control.scale().addTo(map);
+    </script>
+</body>
+</html>

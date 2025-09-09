@@ -1,301 +1,1056 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jharkhand ICAR Institutes District Allocation</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jharkhand ICAR Institutes & KVK Centers District Allocation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2c5530, #4a7c59);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        
-        .content {
-            display: flex;
-            height: 600px;
-        }
-        
-        .map-container {
-            flex: 1;
-            position: relative;
-        }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .legend {
-            width: 350px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-left: 1px solid #ddd;
-            overflow-y: auto;
-        }
-        
-        .legend h3 {
-            margin-top: 0;
-            color: #2c5530;
-            font-size: 18px;
-            border-bottom: 2px solid #2c5530;
-            padding-bottom: 10px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 8px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .color-box {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-        }
-        
-        .institute-info {
-            flex: 1;
-        }
-        
-        .institute-name {
-            font-weight: bold;
-            color: #2c5530;
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-        
-        .district-list {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.3;
-        }
-        
-        .stats {
-            background: #e8f5e8;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-        
-        .stats h4 {
-            margin: 0 0 10px 0;
-            color: #2c5530;
-        }
-        
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .popup-content {
-            font-size: 14px;
-        }
-        
-        .popup-content h4 {
-            margin: 0 0 10px 0;
-            color: #2c5530;
-        }
-        
-        .popup-content p {
-            margin: 5px 0;
-        }
-        
-        .coordinates {
-            font-size: 12px;
-            color: #666;
-            font-style: italic;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #2c5530, #4a7c59);
+        color: white;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      }
+
+      .header h1 {
+        margin: 0 0 10px 0;
+        font-size: 28px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        margin: 0;
+        font-size: 16px;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .content {
+        display: flex;
+        height: 700px;
+      }
+
+      .map-container {
+        flex: 1;
+        position: relative;
+        background: #f0f8ff;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+
+      .legend {
+        width: 400px;
+        background: #f8f9fa;
+        padding: 20px;
+        border-left: 1px solid #ddd;
+        overflow-y: auto;
+      }
+
+      .legend h3 {
+        margin-top: 0;
+        color: #2c5530;
+        font-size: 20px;
+        border-bottom: 3px solid #2c5530;
+        padding-bottom: 10px;
+      }
+
+      .tabs {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 10px;
+        background: #e9ecef;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .tab.active {
+        background: #2c5530;
+        color: white;
+      }
+
+      .tab:first-child {
+        border-radius: 5px 0 0 5px;
+      }
+
+      .tab:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+      }
+
+      .legend-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .flag-icon {
+        width: 30px;
+        height: 20px;
+        border-radius: 3px;
+        margin-right: 12px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .institute-info {
+        flex: 1;
+      }
+
+      .institute-name {
+        font-weight: 700;
+        color: #2c5530;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .institute-details {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .stats {
+        background: linear-gradient(135deg, #e8f5e8, #d4f1d4);
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 10px;
+        border: 1px solid #c3e6c3;
+      }
+
+      .stats h4 {
+        margin: 0 0 15px 0;
+        color: #2c5530;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(44, 85, 48, 0.1);
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+      }
+
+      .stat-value {
+        font-weight: 600;
+        color: #2c5530;
+      }
+
+      .popup-content {
+        font-size: 14px;
+        max-width: 300px;
+      }
+
+      .popup-content h4 {
+        margin: 0 0 10px 0;
+        color: #2c5530;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .popup-content p {
+        margin: 8px 0;
+        line-height: 1.4;
+      }
+
+      .coordinates {
+        font-size: 11px;
+        color: #888;
+        font-style: italic;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #eee;
+      }
+
+      .metadata-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 10px 0;
+      }
+
+      .metadata-item {
+        font-size: 12px;
+      }
+
+      .metadata-label {
+        font-weight: 600;
+        color: #2c5530;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #2c5530;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>Jharkhand ICAR Institutes District Allocation Map</h1>
-            <p>Visualization of ICAR institutes and their allocated districts under VKSA</p>
+      <div class="header">
+        <h1>🌾 Jharkhand ICAR Institutes & KVK Centers 🌾</h1>
+        <p>
+          Comprehensive mapping of agricultural research institutes and
+          extension centers
+        </p>
+      </div>
+
+      <div class="content">
+        <div class="map-container">
+          <div id="map"></div>
         </div>
-        
-        <div class="content">
-            <div class="map-container">
-                <div id="map"></div>
+
+        <div class="legend">
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('icar')">
+              ICAR Institutes
+            </button>
+            <button class="tab" onclick="switchTab('kvk')">KVK Centers</button>
+          </div>
+
+          <input
+            type="text"
+            class="search-box"
+            placeholder="Search institutes or districts..."
+            id="searchBox"
+          />
+
+          <div class="stats">
+            <h4>📊 Quick Statistics</h4>
+            <div class="stat-item">
+              <span>Total Districts:</span>
+              <span class="stat-value">24</span>
             </div>
-            
-            <div class="legend">
-                <h3>ICAR Institutes Legend</h3>
-                
-                <div class="stats">
-                    <h4>Quick Stats</h4>
-                    <div class="stat-item">
-                        <span>Total Districts:</span>
-                        <span>24</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>ICAR Institutes:</span>
-                        <span>6</span>
-                    </div>
-                </div>
-                
-                <div id="legend-items"></div>
+            <div class="stat-item">
+              <span>ICAR Institutes:</span>
+              <span class="stat-value">6</span>
             </div>
+            <div class="stat-item">
+              <span>KVK Centers:</span>
+              <span class="stat-value">24</span>
+            </div>
+            <div class="stat-item">
+              <span>Total Centers:</span>
+              <span class="stat-value">30</span>
+            </div>
+          </div>
+
+          <div id="icar-content" class="tab-content active">
+            <h3>🏛️ ICAR Research Institutes</h3>
+            <div id="icar-legend-items"></div>
+          </div>
+
+          <div id="kvk-content" class="tab-content">
+            <h3>🌱 Krishi Vigyan Kendras</h3>
+            <div id="kvk-legend-items"></div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        // ICAR Institute data with districts
-        const instituteData = {
-            'IIAB Garhkhatanga, Ranchi': {
-                districts: ['Dhanbad', 'Godda', 'Sahibganj', 'Garhwa', 'Chatra'],
-                coords: [23.2743, 85.3415],
-                altitude: '618m',
-                controlling: 'ICAR',
-                color: '#FF6B6B'
-            },
-            'NBPGR Garhkhatanga, Ranchi': {
-                districts: ['Dumka'],
-                coords: [23.2713, 85.3466],
-                altitude: '625m',
-                controlling: 'ICAR-NBPGR, New Delhi',
-                color: '#4ECDC4'
-            },
-            'NISA Namkum, Ranchi': {
-                districts: ['Lohardaga', 'Khunti', 'Simdega', 'Purvi Singhbhum', 'Saraikela-Kharsawan'],
-                coords: [23.3302, 85.3749],
-                altitude: '650m',
-                controlling: 'ICAR',
-                color: '#45B7D1'
-            },
-            'ICAR-RCER-RS Plandu, Ranchi': {
-                districts: ['Gumla', 'Pakur', 'Latehar', 'Palamu', 'Paschim Singhbhum'],
-                coords: [23.2853, 85.4114],
-                altitude: '585m',
-                controlling: 'ICAR RC ER Patna',
-                color: '#96CEB4'
-            },
-            'ICAR-IARI, Hazaribagh': {
-                districts: ['Hazaribagh', 'Bokaro', 'Giridih', 'Deogarh', 'Jamtara'],
-                coords: [24.2851, 85.3600],
-                altitude: '390m',
-                controlling: 'ICAR',
-                color: '#FFEAA7'
-            },
-            'ICAR-CRUSS Hazaribagh': {
-                districts: ['Ramgarh', 'Koderma'],
-                coords: [23.9966, 85.3691],
-                altitude: '614m',
-                controlling: 'ICAR-CRRI Cuttack',
-                color: '#DDA0DD'
+      // ICAR Institute data
+      const icarInstituteData = {
+        "IIAB Garhkhatanga, Ranchi": {
+          districts: ["Dhanbad", "Godda", "Sahibganj", "Garhwa", "Chatra"],
+          coords: [23.2743, 85.3415],
+          altitude: "618m",
+          controlling: "ICAR",
+          type: "Research Institute",
+          color: "#FF6B6B",
+          established: "1985",
+        },
+        "NBPGR Garhkhatanga, Ranchi": {
+          districts: ["Dumka"],
+          coords: [23.2713, 85.3466],
+          altitude: "625m",
+          controlling: "ICAR-NBPGR, New Delhi",
+          type: "Plant Genetic Resources",
+          color: "#4ECDC4",
+          established: "1990",
+        },
+        "NISA Namkum, Ranchi": {
+          districts: [
+            "Lohardaga",
+            "Khunti",
+            "Simdega",
+            "Purvi Singhbhum",
+            "Saraikela-Kharsawan",
+          ],
+          coords: [23.3302, 85.3749],
+          altitude: "650m",
+          controlling: "ICAR",
+          type: "Agricultural Institute",
+          color: "#45B7D1",
+          established: "1988",
+        },
+        "ICAR-RCER-RS Plandu, Ranchi": {
+          districts: [
+            "Gumla",
+            "Pakur",
+            "Latehar",
+            "Palamu",
+            "Paschim Singhbhum",
+          ],
+          coords: [23.2853, 85.4114],
+          altitude: "585m",
+          controlling: "ICAR RC ER Patna",
+          type: "Regional Center",
+          color: "#96CEB4",
+          established: "1982",
+        },
+        "ICAR-IARI, Hazaribagh": {
+          districts: ["Hazaribagh", "Bokaro", "Giridih", "Deogarh", "Jamtara"],
+          coords: [24.2851, 85.36],
+          altitude: "390m",
+          controlling: "ICAR",
+          type: "Agricultural Research",
+          color: "#FFEAA7",
+          established: "1978",
+        },
+        "ICAR-CRUSS Hazaribagh": {
+          districts: ["Ramgarh", "Koderma"],
+          coords: [23.9966, 85.3691],
+          altitude: "614m",
+          controlling: "ICAR-CRRI Cuttack",
+          type: "Research Station",
+          color: "#DDA0DD",
+          established: "1987",
+        },
+      };
+
+      // KVK Centers data
+      const kvkCenterData = {
+        "KVK Khunti": {
+          location: "Torpa, Khunti",
+          coords: [23.08, 85.28],
+          controlling: "ICAR-NISA Namkum Ranchi",
+          altitude: "611m",
+          districts: ["Khunti"],
+          color: "#FF8A80",
+          flag: "🟥",
+        },
+        "KVK Ramgarh": {
+          location: "Mandu, Ramgarh",
+          coords: [23.8113, 85.4682],
+          controlling: "ICAR-RCER-RS Plandu, Ranchi",
+          altitude: "337m",
+          districts: ["Ramgarh"],
+          color: "#FFB74D",
+          flag: "🟧",
+        },
+        "KVK Koderma": {
+          location: "Jainagar, Koderma",
+          coords: [24.3637, 85.652],
+          controlling: "ICAR-CRUSS Hazaribagh",
+          altitude: "397m",
+          districts: ["Koderma"],
+          color: "#FFF176",
+          flag: "🟨",
+        },
+        "KVK Bokaro": {
+          location: "Petarwar, Bokaro",
+          coords: [23.621389, 85.851333],
+          controlling: "BAU, Ranchi",
+          altitude: "237m",
+          districts: ["Bokaro"],
+          color: "#AED581",
+          flag: "🟩",
+        },
+        "KVK Chatra": {
+          location: "Kullu, Chatra",
+          coords: [24.2031, 84.924],
+          controlling: "BAU, Ranchi",
+          altitude: "515m",
+          districts: ["Chatra"],
+          color: "#4DB6AC",
+          flag: "🟦",
+        },
+        "KVK Dhanbad": {
+          location: "Sindri Road, Dhanbad",
+          coords: [23.7084, 86.5262],
+          controlling: "BAU, Ranchi",
+          altitude: "199m",
+          districts: ["Dhanbad"],
+          color: "#7986CB",
+          flag: "🟪",
+        },
+        "KVK Dumka": {
+          location: "Khunta Bandh, Dumka",
+          coords: [24.2538, 87.2444],
+          controlling: "BAU, Ranchi",
+          altitude: "452m",
+          districts: ["Dumka"],
+          color: "#F06292",
+          flag: "🟥",
+        },
+        "KVK East Singhbhum": {
+          location: "Darisai, East Singhbhum",
+          coords: [22.6933, 86.3936],
+          controlling: "BAU, Ranchi",
+          altitude: "100m",
+          districts: ["East Singhbhum"],
+          color: "#FFB74D",
+          flag: "🟧",
+        },
+        "KVK Garhwa": {
+          location: "Sub-Divisional Agriculture Farm, Garhwa",
+          coords: [24.1557, 83.7888],
+          controlling: "BAU, Ranchi",
+          altitude: "197m",
+          districts: ["Garhwa"],
+          color: "#FFF176",
+          flag: "🟨",
+        },
+        "KVK Giridih": {
+          location: "Bengabad, Giridih",
+          coords: [24.274, 86.3816],
+          controlling: "BAU, Ranchi",
+          altitude: "289m",
+          districts: ["Giridih"],
+          color: "#AED581",
+          flag: "🟩",
+        },
+        "KVK Jamtara": {
+          location: "Bena, Jamtara",
+          coords: [23.973, 86.779],
+          controlling: "BAU, Ranchi",
+          altitude: "201m",
+          districts: ["Jamtara"],
+          color: "#4DB6AC",
+          flag: "🟦",
+        },
+        "KVK Latehar": {
+          location: "Balumath, Latehar",
+          coords: [23.83, 84.7838],
+          controlling: "BAU, Ranchi",
+          altitude: "550m",
+          districts: ["Latehar"],
+          color: "#7986CB",
+          flag: "🟪",
+        },
+        "KVK Lohardaga": {
+          location: "Kisko Farm, Lohardaga",
+          coords: [23.5133, 84.6667],
+          controlling: "BAU, Ranchi",
+          altitude: "650m",
+          districts: ["Lohardaga"],
+          color: "#F06292",
+          flag: "🟥",
+        },
+        "KVK Pakur": {
+          location: "Maheshpur Farm, Pakur",
+          coords: [24.481, 87.7591],
+          controlling: "BAU, Ranchi",
+          altitude: "68m",
+          districts: ["Pakur"],
+          color: "#FFB74D",
+          flag: "🟧",
+        },
+        "KVK Palamau": {
+          location: "Chianki, Palamau",
+          coords: [24.0169, 84.1047],
+          controlling: "BAU, Ranchi",
+          altitude: "240m",
+          districts: ["Palamau"],
+          color: "#FFF176",
+          flag: "🟨",
+        },
+        "KVK Sahibganj": {
+          location: "Sahibganj",
+          coords: [25.2359, 87.6616],
+          controlling: "BAU, Ranchi",
+          altitude: "34m",
+          districts: ["Sahibganj"],
+          color: "#AED581",
+          flag: "🟩",
+        },
+        "KVK Saraikela": {
+          location: "Gamhariya, Saraikela",
+          coords: [22.8583, 86.0583],
+          controlling: "BAU, Ranchi",
+          altitude: "200m",
+          districts: ["Saraikela-Kharsawan"],
+          color: "#4DB6AC",
+          flag: "🟦",
+        },
+        "KVK Simdega": {
+          location: "Bano, Simdega",
+          coords: [23.1997, 84.4425],
+          controlling: "BAU, Ranchi",
+          altitude: "758m",
+          districts: ["Simdega"],
+          color: "#7986CB",
+          flag: "🟪",
+        },
+        "KVK West Singhbhum": {
+          location: "Jagannathpur, West Singhbhum",
+          coords: [22.2175, 85.6391],
+          controlling: "BAU, Ranchi",
+          altitude: "200m",
+          districts: ["West Singhbhum"],
+          color: "#F06292",
+          flag: "🟥",
+        },
+        "KVK Ranchi": {
+          location: "Morabadi, Ranchi",
+          coords: [23.3978, 85.3388],
+          controlling: "Ramakrishna Mission Ashrama",
+          altitude: "651m",
+          districts: ["Ranchi"],
+          color: "#FFB74D",
+          flag: "🟧",
+        },
+        "KVK Godda": {
+          location: "Chakeshwari Farm, Godda",
+          coords: [24.8495, 87.207],
+          controlling: "Gramin Vikas Trust",
+          altitude: "210m",
+          districts: ["Godda"],
+          color: "#FFF176",
+          flag: "🟨",
+        },
+        "KVK Hazaribagh": {
+          location: "Canary Hill Road, Hazaribagh",
+          coords: [24.0171, 85.3896],
+          controlling: "Holycross V.T.I.",
+          altitude: "613m",
+          districts: ["Hazaribagh"],
+          color: "#AED581",
+          flag: "🟩",
+        },
+        "KVK Deoghar": {
+          location: "Sujani, Deoghar",
+          coords: [24.4851, 86.6224],
+          controlling: "Santhal Paharia Seva Mandal",
+          altitude: "255m",
+          districts: ["Deoghar"],
+          color: "#4DB6AC",
+          flag: "🟦",
+        },
+        "KVK Gumla": {
+          location: "Vikas Bharati, Bishunpur",
+          coords: [23.6667, 84.6667],
+          controlling: "Vikas Bharati",
+          altitude: "758m",
+          districts: ["Gumla"],
+          color: "#7986CB",
+          flag: "🟪",
+        },
+      };
+
+      // Initialize map centered on Jharkhand
+      const map = L.map("map").setView([23.6102, 85.2799], 7);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      let icarMarkers = [];
+      let kvkMarkers = [];
+      let districtPolygons = [];
+
+      // District boundary coordinates (simplified polygons)
+      const districtBoundaries = {
+        Ranchi: [
+          [23.2, 85.1],
+          [23.2, 85.6],
+          [23.5, 85.6],
+          [23.5, 85.1],
+        ],
+        Khunti: [
+          [23.0, 85.2],
+          [23.0, 85.4],
+          [23.2, 85.4],
+          [23.2, 85.2],
+        ],
+        Gumla: [
+          [23.4, 84.4],
+          [23.4, 84.8],
+          [23.8, 84.8],
+          [23.8, 84.4],
+        ],
+        Simdega: [
+          [22.9, 84.2],
+          [22.9, 84.6],
+          [23.3, 84.6],
+          [23.3, 84.2],
+        ],
+        Lohardaga: [
+          [23.3, 84.4],
+          [23.3, 84.8],
+          [23.7, 84.8],
+          [23.7, 84.4],
+        ],
+        Palamu: [
+          [23.8, 83.8],
+          [23.8, 84.4],
+          [24.4, 84.4],
+          [24.4, 83.8],
+        ],
+        Latehar: [
+          [23.6, 84.6],
+          [23.6, 85.0],
+          [24.0, 85.0],
+          [24.0, 84.6],
+        ],
+        Chatra: [
+          [24.0, 84.6],
+          [24.0, 85.2],
+          [24.4, 85.2],
+          [24.4, 84.6],
+        ],
+        Hazaribagh: [
+          [23.8, 85.2],
+          [23.8, 85.6],
+          [24.4, 85.6],
+          [24.4, 85.2],
+        ],
+        Koderma: [
+          [24.2, 85.4],
+          [24.2, 85.8],
+          [24.6, 85.8],
+          [24.6, 85.4],
+        ],
+        Giridih: [
+          [24.0, 86.0],
+          [24.0, 86.6],
+          [24.4, 86.6],
+          [24.4, 86.0],
+        ],
+        Ramgarh: [
+          [23.6, 85.4],
+          [23.6, 85.8],
+          [24.0, 85.8],
+          [24.0, 85.4],
+        ],
+        Bokaro: [
+          [23.4, 85.6],
+          [23.4, 86.2],
+          [23.8, 86.2],
+          [23.8, 85.6],
+        ],
+        Dhanbad: [
+          [23.6, 86.2],
+          [23.6, 86.8],
+          [24.0, 86.8],
+          [24.0, 86.2],
+        ],
+        Jamtara: [
+          [23.8, 86.6],
+          [23.8, 87.0],
+          [24.2, 87.0],
+          [24.2, 86.6],
+        ],
+        Dumka: [
+          [24.0, 87.0],
+          [24.0, 87.4],
+          [24.4, 87.4],
+          [24.4, 87.0],
+        ],
+        Pakur: [
+          [24.2, 87.4],
+          [24.2, 87.8],
+          [24.8, 87.8],
+          [24.8, 87.4],
+        ],
+        Godda: [
+          [24.6, 87.0],
+          [24.6, 87.4],
+          [25.0, 87.4],
+          [25.0, 87.0],
+        ],
+        Sahibganj: [
+          [24.8, 87.4],
+          [24.8, 87.8],
+          [25.4, 87.8],
+          [25.4, 87.4],
+        ],
+        Deoghar: [
+          [24.2, 86.4],
+          [24.2, 86.8],
+          [24.6, 86.8],
+          [24.6, 86.4],
+        ],
+        "East Singhbhum": [
+          [22.4, 86.0],
+          [22.4, 86.8],
+          [22.8, 86.8],
+          [22.8, 86.0],
+        ],
+        "West Singhbhum": [
+          [22.0, 85.2],
+          [22.0, 86.0],
+          [22.6, 86.0],
+          [22.6, 85.2],
+        ],
+        "Saraikela-Kharsawan": [
+          [22.6, 85.8],
+          [22.6, 86.4],
+          [23.0, 86.4],
+          [23.0, 85.8],
+        ],
+        Garhwa: [
+          [24.0, 83.4],
+          [24.0, 84.0],
+          [24.4, 84.0],
+          [24.4, 83.4],
+        ],
+      };
+
+      function createDistrictPolygons() {
+        districtPolygons.forEach((polygon) => map.removeLayer(polygon));
+        districtPolygons = [];
+
+        // Create polygons for ICAR districts
+        Object.entries(icarInstituteData).forEach(([instituteName, data]) => {
+          data.districts.forEach((district) => {
+            if (districtBoundaries[district]) {
+              const polygon = L.polygon(districtBoundaries[district], {
+                color: data.color,
+                fillColor: data.color,
+                fillOpacity: 0.2,
+                weight: 2,
+              }).addTo(map);
+
+              polygon.bindPopup(`
+                            <div class="popup-content">
+                                <h4>${district} District</h4>
+                                <p><strong>🏛️ Allocated to:</strong> ${instituteName}</p>
+                                <p><strong>🏢 Controlling Body:</strong> ${data.controlling}</p>
+                                <p><strong>📍 Type:</strong> ICAR Institute</p>
+                            </div>
+                        `);
+
+              districtPolygons.push(polygon);
             }
-        };
-
-        // Initialize map centered on Jharkhand
-        const map = L.map('map').setView([23.6102, 85.2799], 7);
-
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Add markers for each institute
-        Object.entries(instituteData).forEach(([instituteName, data]) => {
-            const marker = L.marker(data.coords).addTo(map);
-            
-            const popupContent = `
-                <div class="popup-content">
-                    <h4>${instituteName}</h4>
-                    <p><strong>Districts (${data.districts.length}):</strong><br>
-                    ${data.districts.join(', ')}</p>
-                    <p><strong>Controlling Body:</strong> ${data.controlling}</p>
-                    <p><strong>Altitude:</strong> ${data.altitude}</p>
-                    <p class="coordinates">
-                        ${data.coords[0]}°N, ${data.coords[1]}°E
-                    </p>
-                </div>
-            `;
-            
-            marker.bindPopup(popupContent);
+          });
         });
 
-        // Create legend
-        const legendContainer = document.getElementById('legend-items');
-        
-        Object.entries(instituteData).forEach(([instituteName, data]) => {
-            const legendItem = document.createElement('div');
-            legendItem.className = 'legend-item';
-            
-            legendItem.innerHTML = `
-                <div class="color-box" style="background-color: ${data.color}"></div>
-                <div class="institute-info">
-                    <div class="institute-name">${instituteName}</div>
-                    <div class="district-list">
-                        Districts (${data.districts.length}): ${data.districts.join(', ')}
-                    </div>
-                </div>
-            `;
-            
-            legendContainer.appendChild(legendItem);
-        });
+        // Create polygons for KVK districts
+        Object.entries(kvkCenterData).forEach(([kvkName, data]) => {
+          data.districts.forEach((district) => {
+            if (districtBoundaries[district]) {
+              const polygon = L.polygon(districtBoundaries[district], {
+                color: data.color,
+                fillColor: data.color,
+                fillOpacity: 0.3,
+                weight: 2,
+                dashArray: "5, 5",
+              }).addTo(map);
 
-        // Add district boundaries as approximate circles (since we don't have actual shapefiles)
-        Object.entries(instituteData).forEach(([instituteName, data]) => {
-            data.districts.forEach((district, index) => {
-                // Create approximate positions for districts around each institute
-                const offsetLat = (Math.random() - 0.5) * 0.4;
-                const offsetLng = (Math.random() - 0.5) * 0.4;
-                const districtCoords = [
-                    data.coords[0] + offsetLat,
-                    data.coords[1] + offsetLng
-                ];
-                
-                const circle = L.circle(districtCoords, {
-                    color: data.color,
-                    fillColor: data.color,
-                    fillOpacity: 0.3,
-                    radius: 8000
-                }).addTo(map);
-                
-                circle.bindPopup(`
+              polygon.bindPopup(`
+                            <div class="popup-content">
+                                <h4>${district} District</h4>
+                                <p><strong>🌱 KVK Center:</strong> ${kvkName}</p>
+                                <p><strong>📍 Location:</strong> ${data.location}</p>
+                                <p><strong>🏢 Controlling Body:</strong> ${data.controlling}</p>
+                            </div>
+                        `);
+
+              districtPolygons.push(polygon);
+            }
+          });
+        });
+      }
+
+      function createICARMarkers() {
+        icarMarkers.forEach((marker) => map.removeLayer(marker));
+        icarMarkers = [];
+
+        Object.entries(icarInstituteData).forEach(([instituteName, data]) => {
+          const marker = L.marker(data.coords, {
+            title: instituteName,
+          }).addTo(map);
+
+          const popupContent = `
                     <div class="popup-content">
-                        <h4>${district} District</h4>
-                        <p><strong>Allocated to:</strong> ${instituteName}</p>
-                        <p><strong>Controlling Body:</strong> ${data.controlling}</p>
+                        <h4>🏛️ ${instituteName}</h4>
+                        <div class="metadata-grid">
+                            <div class="metadata-item">
+                                <div class="metadata-label">Type:</div>
+                                <div>${data.type}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">Established:</div>
+                                <div>${data.established}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">Altitude:</div>
+                                <div>${data.altitude}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">Districts:</div>
+                                <div>${data.districts.length}</div>
+                            </div>
+                        </div>
+                        <p><strong>🏢 Controlling Body:</strong> ${
+                          data.controlling
+                        }</p>
+                        <p><strong>🎯 Allocated Districts:</strong><br>
+                        ${data.districts.join(", ")}</p>
+                        <p class="coordinates">
+                            📍 ${data.coords[0]}°N, ${data.coords[1]}°E
+                        </p>
                     </div>
-                `);
-            });
+                `;
+
+          marker.bindPopup(popupContent);
+          icarMarkers.push(marker);
         });
+      }
+
+      function createKVKMarkers() {
+        kvkMarkers.forEach((marker) => map.removeLayer(marker));
+        kvkMarkers = [];
+
+        Object.entries(kvkCenterData).forEach(([kvkName, data]) => {
+          const marker = L.marker(data.coords, {
+            title: kvkName,
+          }).addTo(map);
+
+          const popupContent = `
+                    <div class="popup-content">
+                        <h4>🌱 ${kvkName}</h4>
+                        <div class="metadata-grid">
+                            <div class="metadata-item">
+                                <div class="metadata-label">Location:</div>
+                                <div>${data.location}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">Altitude:</div>
+                                <div>${data.altitude}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">District:</div>
+                                <div>${data.districts[0]}</div>
+                            </div>
+                            <div class="metadata-item">
+                                <div class="metadata-label">Flag:</div>
+                                <div style="font-size: 16px;">${data.flag}</div>
+                            </div>
+                        </div>
+                        <p><strong>🏢 Controlling Body:</strong> ${data.controlling}</p>
+                        <p class="coordinates">
+                            📍 ${data.coords[0]}°N, ${data.coords[1]}°E
+                        </p>
+                    </div>
+                `;
+
+          marker.bindPopup(popupContent);
+          kvkMarkers.push(marker);
+        });
+      }
+
+      function createICARLegend() {
+        const container = document.getElementById("icar-legend-items");
+        container.innerHTML = "";
+
+        Object.entries(icarInstituteData).forEach(([instituteName, data]) => {
+          const legendItem = document.createElement("div");
+          legendItem.className = "legend-item";
+          legendItem.onclick = () => {
+            map.setView(data.coords, 10);
+            icarMarkers
+              .find((marker) => marker.options.title === instituteName)
+              ?.openPopup();
+          };
+
+          legendItem.innerHTML = `
+                    <div class="flag-icon" style="background: linear-gradient(45deg, ${
+                      data.color
+                    }, ${data.color}88);"></div>
+                    <div class="institute-info">
+                        <div class="institute-name">🏛️ ${instituteName}</div>
+                        <div class="institute-details">
+                            <strong>Type:</strong> ${data.type}<br>
+                            <strong>Est:</strong> ${
+                              data.established
+                            } | <strong>Alt:</strong> ${data.altitude}<br>
+                            <strong>Districts (${
+                              data.districts.length
+                            }):</strong> ${data.districts.join(", ")}<br>
+                            <strong>Control:</strong> ${data.controlling}
+                        </div>
+                    </div>
+                `;
+
+          container.appendChild(legendItem);
+        });
+      }
+
+      function createKVKLegend() {
+        const container = document.getElementById("kvk-legend-items");
+        container.innerHTML = "";
+
+        Object.entries(kvkCenterData).forEach(([kvkName, data]) => {
+          const legendItem = document.createElement("div");
+          legendItem.className = "legend-item";
+          legendItem.onclick = () => {
+            map.setView(data.coords, 11);
+            kvkMarkers
+              .find((marker) => marker.options.title === kvkName)
+              ?.openPopup();
+          };
+
+          legendItem.innerHTML = `
+                    <div class="flag-icon" style="background: linear-gradient(45deg, ${data.color}, ${data.color}88); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                        ${data.flag}
+                    </div>
+                    <div class="institute-info">
+                        <div class="institute-name">🌱 ${kvkName}</div>
+                        <div class="institute-details">
+                            <strong>Location:</strong> ${data.location}<br>
+                            <strong>District:</strong> ${data.districts[0]} | <strong>Alt:</strong> ${data.altitude}<br>
+                            <strong>Control:</strong> ${data.controlling}
+                        </div>
+                    </div>
+                `;
+
+          container.appendChild(legendItem);
+        });
+      }
+
+      function switchTab(tabName) {
+        // Update tab buttons
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelector(
+            `.tab:${tabName === "icar" ? "first-child" : "last-child"}`
+          )
+          .classList.add("active");
+
+        // Update tab content
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.remove("active"));
+        document.getElementById(`${tabName}-content`).classList.add("active");
+      }
+
+      // Search functionality
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const legendItems = document.querySelectorAll(".legend-item");
+
+          legendItems.forEach((item) => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+              item.style.display = "flex";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+
+      // Initialize map
+      function initializeMap() {
+        createDistrictPolygons();
+        createICARMarkers();
+        createKVKMarkers();
+        createICARLegend();
+        createKVKLegend();
 
         // Add scale control
         L.control.scale().addTo(map);
+
+        // Add layer control
+        const overlayMaps = {
+          "District Boundaries": L.layerGroup(districtPolygons),
+          "ICAR Institutes": L.layerGroup(icarMarkers),
+          "KVK Centers": L.layerGroup(kvkMarkers),
+        };
+
+        L.control.layers(null, overlayMaps).addTo(map);
+      }
+
+      // Initialize everything when page loads
+      window.onload = initializeMap;
     </script>
-</body>
+  </body>
 </html>
